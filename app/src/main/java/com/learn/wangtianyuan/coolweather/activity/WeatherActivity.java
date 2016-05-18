@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -13,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.learn.wangtianyuan.coolweather.R;
+import com.learn.wangtianyuan.coolweather.service.AutoUpdateService;
 import com.learn.wangtianyuan.coolweather.util.HttpCallbackListener;
 import com.learn.wangtianyuan.coolweather.util.HttpUtil;
 import com.learn.wangtianyuan.coolweather.util.Utility;
@@ -129,6 +131,11 @@ public class WeatherActivity extends Activity implements View.OnClickListener {
         currentDateText.setText(prefs.getString("current_date", ""));
         weatherInfoLayout.setVisibility(View.VISIBLE);
         cityNameText.setVisibility(View.VISIBLE);
+
+        Log.d("test","showWeather start service");
+        //启动自动更新服务
+        Intent intent = new Intent(this, AutoUpdateService.class);
+        startService(intent);
     }
 
 }
