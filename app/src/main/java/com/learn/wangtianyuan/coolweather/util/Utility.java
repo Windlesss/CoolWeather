@@ -155,7 +155,21 @@ public class Utility {
      * 解析服务器返回的天气数据,并将解析出的数据存储到本地。
      */
     public static void handleWeatherResponse(Context context, String response) {
-
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            if ("200".equals(jsonObject.getString("resultcode"))) {
+                JSONObject jsonResult = jsonObject.getJSONObject("result");
+                JSONObject jsonToday = jsonResult.getJSONObject("today");
+                String cityName = jsonToday.getString("city");
+                String temp = jsonToday.getString("temperature");
+                String weatherDesp = jsonToday.getString("weather");
+                JSONObject jsonSk = jsonResult.getJSONObject("sk");
+                String publishTime = jsonSk.getString("time");
+                saveWeatherInfo(context,cityName,cityName,temp,weatherDesp,publishTime);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -163,7 +177,7 @@ public class Utility {
      */
     public static void saveWeatherInfo(Context context, String cityName,
                                        String weatherCode,
-                                       String temp1, String temp2,
+                                       String temp,
                                        String weatherDesp,
                                        String publishTime) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy年M月d日", Locale.CHINA);
@@ -172,8 +186,7 @@ public class Utility {
         editor.putBoolean("city_selected", true);
         editor.putString("city_name", cityName);
         editor.putString("weather_code", weatherCode);
-        editor.putString("temp1", temp1);
-        editor.putString("temp2", temp2);
+        editor.putString("temp", temp);
         editor.putString("weather_desp", weatherDesp);
         editor.putString("publish_time", publishTime);
         editor.putString("current_date", sdf.format(new Date()));
